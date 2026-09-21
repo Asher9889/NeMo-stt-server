@@ -163,17 +163,15 @@ def create_app(engine: ASREngine, chunk_ms: int) -> FastAPI:
 
                     if msg_type == "flush":
                         final_text = await session.flush()
-                        if final_text:
-                            await websocket.send_text(
-                                json.dumps({"type": "final", "text": final_text, "confidence": 0.95})
-                            )
+                        await websocket.send_text(
+                            json.dumps({"type": "final", "text": final_text, "confidence": 0.95})
+                        )
 
                     elif msg_type == "end":
                         final_text = await session.flush()
-                        if final_text:
-                            await websocket.send_text(
-                                json.dumps({"type": "final", "text": final_text, "confidence": 0.95})
-                            )
+                        await websocket.send_text(
+                            json.dumps({"type": "final", "text": final_text, "confidence": 0.95})
+                        )
                         break
 
                 # --- Binary (audio) messages ---
