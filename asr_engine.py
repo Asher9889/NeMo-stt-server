@@ -123,9 +123,16 @@ class ASREngine:
 
     @torch.inference_mode()
     def _infer(self, tensor: torch.Tensor, state: StreamState, keep_all: bool):
-        """Run one streaming step through the model."""
+        """Run one streaming step through the model (preprocess → encoder → decoder)."""
         audio_len = torch.tensor([tensor.shape[1]], device=self.device)
 
+        # Step 1: Preprocessor — raw PCM → mel-spectrogram features (batch, dim, time)
+        processed_signal, processed_signal_length = self.model.preprocessor(
+            input_signal=tensor,
+            length=audio_len,
+        )
+
+        # Step 2: Conformer stream step — encoder + decoder with cache
         (
             pred_out,
             transcribed_texts,
@@ -134,8 +141,8 @@ class ASREngine:
             cache_len,
             hyps,
         ) = self.model.conformer_stream_step(
-            processed_signal=tensor,
-            processed_signal_length=audio_len,
+            processed_signal=processed_signal,
+            processed_signal_length=processed_signal_length,
             cache_last_channel=state.cache_last_channel,
             cache_last_time=state.cache_last_time,
             cache_last_channel_len=state.cache_last_channel_len,
