@@ -11,7 +11,8 @@ import os
 import numpy as np
 import torch
 import nemo.collections.asr as nemo_asr
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from typing import Any
 from logging import getLogger
 
 logger = getLogger(__name__)
@@ -30,11 +31,11 @@ LATENCY_PRESETS: dict[int, list[int]] = {
 class StreamState:
     """Per-connection streaming state. Holds cache tensors and decoder state."""
 
-    cache_last_channel: torch.Tensor | None = None
-    cache_last_time: torch.Tensor | None = None
-    cache_last_channel_len: torch.Tensor | None = None
-    previous_hypotheses = None
-    previous_pred_out = None
+    cache_last_channel: Any = None
+    cache_last_time: Any = None
+    cache_last_channel_len: Any = None
+    previous_hypotheses: Any = None
+    previous_pred_out: Any = None
     drop_extra_pre_encoded: int = 0
     step_num: int = 0
 
