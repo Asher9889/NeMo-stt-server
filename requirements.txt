@@ -1,0 +1,12 @@
+# Hindi Streaming ASR Server
+# Install with: pip install -r requirements.txt
+
+# NeMo toolkit with ASR support (pulls in PyTorch, torchaudio, etc.)
+nemo_toolkit[asr]
+
+# Web server
+fastapi
+uvicorn[standard]
+
+# WebSocket support (uvicorn[standard] includes websockets, but be explicit)
+websockets
